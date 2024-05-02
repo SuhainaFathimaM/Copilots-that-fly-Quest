@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Generator</title>
+</head>
+<body>
+    <h1>Code Generator</h1>
+    <form id="codeForm">
+        <textarea id="userInput" rows="5" cols="50"></textarea>
+        <button type="submit">Generate Code</button>
+    </form>
+    <div id="generatedCode"></div>
+
+    <script>
+        document.getElementById('codeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const userInput = document.getElementById('userInput').value;
+            
+            const response = await fetch('/api/get_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: userInput })
+            });
+            
+            const data = await response.json();
+            if (data.code) {
+                document.getElementById('generatedCode').innerText = data.code;
+            } else if (data.error) {
+                document.getElementById('generatedCode').innerText = 'Error: ' + data.error;
+            }
+        });
+    </script>
+</body>
+</html>
